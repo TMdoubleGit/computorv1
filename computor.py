@@ -44,6 +44,7 @@ def print_reduced_form(coefficients):
     print(f"Reduced form: {reduced_form} = 0")
 
 def solve_degree_1(coefficients):
+    """This function aims to solve polynomial of degree 1."""
     b = coefficients.get(1, 0)
     c = coefficients.get(0, 0)
 
@@ -52,7 +53,7 @@ def solve_degree_1(coefficients):
     print(round(x, 6))
 
 def solve_degree_2(coefficients):
-        
+    """This function aims to solve polynomial of degree 2."""
     a = coefficients.get(2, 0)
     b = coefficients.get(1, 0)
     c = coefficients.get(0, 0)
