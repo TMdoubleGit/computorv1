@@ -12,8 +12,7 @@ def parse_polynomial(polynomial_str):
         print("Invalid equation format. Please provide a valid equation with a single '=' sign.")
         sys.exit(1)
     regex = r"([+-]?\s*\d*\.?\d*)\s*\*\s*X\^(\d+)"
-    matches = re.findall(regex, polynomial_str)
-    
+
     left_side_matches = re.findall(regex, sides[0])
     right_side_matches = re.findall(regex, sides[1])
 
@@ -44,6 +43,14 @@ def print_reduced_form(coefficients):
     reduced_form = " + ".join(terms)
     print(f"Reduced form: {reduced_form} = 0")
 
+def solve_degree_1(coefficients):
+    b = coefficients.get(1, 0)
+    c = coefficients.get(0, 0)
+
+    x = -c / b
+    print("The solution is:")
+    print(round(x, 6))
+
 def solve_degree_2(coefficients):
         
     a = coefficients.get(2, 0)
@@ -73,17 +80,22 @@ def main():
     polynomial_str = sys.argv[1]
     coefficients = parse_polynomial(polynomial_str)
     
-    print_reduced_form(coefficients)
-    
     degree = max(coefficients.keys(), default=0)
-    print(f"Polynomial degree: {degree}")
     
-    if degree == 2:
+    if degree == 1:
+        print_reduced_form(coefficients)
+        print(f"Polynomial degree: {degree}")
+        solve_degree_1(coefficients)
+    elif degree == 2:
+        print_reduced_form(coefficients)
+        print(f"Polynomial degree: {degree}")
         solve_degree_2(coefficients)
     elif degree > 2:
+        print_reduced_form(coefficients)
+        print(f"Polynomial degree: {degree}")
         print("The polynomial degree is strictly greater than 2, I can't solve.")
     else:
-        print("Polynomial degree is less than 2, it's not a quadratic equation.")
+        print("There is nothing to find up here buddy, try again with a proper polynomial!")
 
 if __name__ == "__main__":
     main()
