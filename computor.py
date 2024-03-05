@@ -2,6 +2,15 @@ import re
 import sys
 import math
 
+def is_valid_exponent(exponent):
+    try:
+        float(exponent)
+        if exponent == int(exponent) or exponent < 0 or exponent > 2:
+            return False
+        return True
+    except ValueError:
+        return False
+
 def parse_polynomial(polynomial_str):
     """
     This functions will parse our equations and determine
@@ -11,7 +20,7 @@ def parse_polynomial(polynomial_str):
     if len(sides) != 2:
         print("Invalid equation format. Please provide a valid equation with a single '=' sign.")
         sys.exit(1)
-    regex = r"([+-]?\s*\d*\.?\d*)\s*\*\s*X\^(\d+)"
+    regex = r"([+-]?\s*\d*\.?\d*)\s*\*\s*X\^([+-]?\d+(?:\.\d+)?)"
 
     left_side_matches = re.findall(regex, sides[0])
     right_side_matches = re.findall(regex, sides[1])
@@ -20,12 +29,20 @@ def parse_polynomial(polynomial_str):
     
     for match in left_side_matches:
         coefficient = float(match[0].replace(" ", "")) if match[0] else 1.0
-        exponent = int(match[1])
+        exponent = float(match[1])
+        print(exponent)
+        if not is_valid_exponent(exponent):
+            print("Les polynômes pris en charge doivent être de degré 0, 1 ou 2.")
+            sys.exit(1)
         coefficients[exponent] = coefficients.get(exponent, 0) + coefficient
 
     for match in right_side_matches:
         coefficient = float(match[0].replace(" ", "")) if match[0] else 1.0
-        exponent = int(match[1])
+        exponent = float(match[1])
+        print(exponent)
+        if not is_valid_exponent(exponent):
+            print("Les polynômes pris en charge doivent être de degré 0, 1 ou 2.")
+            sys.exit(1)
         coefficients[exponent] = coefficients.get(exponent, 0) - coefficient
     
     return coefficients
