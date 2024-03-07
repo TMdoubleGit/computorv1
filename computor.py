@@ -5,11 +5,19 @@ import math
 def is_valid_exponent(exponent):
     try:
         float(exponent)
-        if exponent == int(exponent) or exponent < 0 or exponent > 2:
+        if exponent != int(exponent) or exponent < 0 or exponent > 2:
             return False
         return True
     except ValueError:
         return False
+
+def is_valid_expression(expression, regex):
+    elements = expression.split(r'\s*\+\s*|\s*-\s*')
+    for element in elements:
+        element = element.strip()
+        if not re.fullmatch(regex, element):
+            return False
+    return True
 
 def parse_polynomial(polynomial_str):
     """
@@ -20,8 +28,11 @@ def parse_polynomial(polynomial_str):
     if len(sides) != 2:
         print("Invalid equation format. Please provide a valid equation with a single '=' sign.")
         sys.exit(1)
-    regex = r"([+-]?\s*\d*\.?\d*)\s*\*\s*X\^([+-]?\d+(?:\.\d+)?)"
+    regex = r"([+-]?\s*\d*\.?\d*)\s*\*\s*X\^(\d+)"
 
+    if (is_valid_expression(sides[0], regex) == False or is_valid_expression(sides[1], regex) == False ):
+        print("Invalid equation format.")
+        sys:exit(1)
     left_side_matches = re.findall(regex, sides[0])
     right_side_matches = re.findall(regex, sides[1])
 
@@ -29,22 +40,20 @@ def parse_polynomial(polynomial_str):
     
     for match in left_side_matches:
         coefficient = float(match[0].replace(" ", "")) if match[0] else 1.0
-        exponent = float(match[1])
-        print(exponent)
+        exponent = float(match[1]) if match[1] else 1.0
         if not is_valid_exponent(exponent):
-            print("Les polynômes pris en charge doivent être de degré 0, 1 ou 2.")
+            print("The polynomial degree must be 0, 1 or 2.")
             sys.exit(1)
         coefficients[exponent] = coefficients.get(exponent, 0) + coefficient
 
     for match in right_side_matches:
         coefficient = float(match[0].replace(" ", "")) if match[0] else 1.0
-        exponent = float(match[1])
-        print(exponent)
+        exponent = float(match[1]) if match[1] else 1.0
         if not is_valid_exponent(exponent):
-            print("Les polynômes pris en charge doivent être de degré 0, 1 ou 2.")
+            print("The polynomial degree must be 0, 1 or 2.")
             sys.exit(1)
         coefficients[exponent] = coefficients.get(exponent, 0) - coefficient
-    
+
     return coefficients
 
 def print_reduced_form(coefficients):
@@ -56,7 +65,7 @@ def print_reduced_form(coefficients):
         elif exponent == 1:
             terms.append(f"{coefficient} * X^1")
         else:
-            terms.append(f"{coefficient} * X^{exponent}")
+            terms.append(f"{coefficient} * X^{int(exponent)}")
     reduced_form = " + ".join(terms)
     print(f"Reduced form: {reduced_form} = 0")
 
@@ -97,23 +106,27 @@ def main():
     
     polynomial_str = sys.argv[1]
     coefficients = parse_polynomial(polynomial_str)
+    if coefficients == {}:
+        sys.exit(1)
     
     degree = max(coefficients.keys(), default=0)
     
     if degree == 1:
         print_reduced_form(coefficients)
-        print(f"Polynomial degree: {degree}")
+        print(f"Polynomial degree: {int(degree)}")
         solve_degree_1(coefficients)
     elif degree == 2:
         print_reduced_form(coefficients)
-        print(f"Polynomial degree: {degree}")
+        print(f"Polynomial degree: {int(degree)}")
         solve_degree_2(coefficients)
     elif degree > 2:
         print_reduced_form(coefficients)
-        print(f"Polynomial degree: {degree}")
+        print(f"Polynomial degree: {int(degree)}")
         print("The polynomial degree is strictly greater than 2, I can't solve.")
     else:
-        print("There is nothing to find up here buddy, try again with a proper polynomial!")
+        print(degree)
+        print("This is an exception, all real numbers are a solution!")
+        print("try again with a proper polynomial!")
 
 if __name__ == "__main__":
     main()
