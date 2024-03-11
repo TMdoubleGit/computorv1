@@ -85,6 +85,8 @@ def solve_degree_1(coefficients):
     c = coefficients.get(0, 0)
 
     x = -c / b
+    if (int(x) == x):
+        x = int(x)
     print("The solution is:")
     print(round(x, 6))
 
@@ -99,11 +101,17 @@ def solve_degree_2(coefficients):
     if discriminant > 0:
         x1 = (-b + math.sqrt(discriminant)) / (2*a)
         x2 = (-b - math.sqrt(discriminant)) / (2*a)
+        if (int(x1) == x1):
+            x1 = int(x1)
+        if (int(x2) == x2):
+            x2 == int(x2)
         print("Discriminant is strictly positive, the two solutions are:")
         print(round(x1, 6))
         print(round(x2, 6))
     elif discriminant == 0:
         x = -b / (2*a)
+        if (int(x) == x):
+            x = int(x)
         print("Discriminant is zero, the solution is:")
         print(round(x, 6))
     else:
