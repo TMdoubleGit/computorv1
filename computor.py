@@ -26,14 +26,17 @@ def parse_polynomial(polynomial_str):
     """This functions will parse our equations and determine the degree of the polynomial."""
     sides = polynomial_str.split("=")
     if len(sides) != 2:
-        print("Invalid equation format. Please provide a valid equation with a single '=' sign.")
+        print("Invalid equation format.")
+        print("Please provide a valid equation with a single '=' sign.")
         sys.exit(1)
     regex = r"([+-]?\s*\d*\.?\d*)\s*\*\s*X\^([+-]?\d+(?:\.\d+)?)"
 
     for side in sides:
         side = side.strip()
         if (is_valid_expression(side, regex) == False):
-            print("Invalid equation format. All polynomial should be written 'a * x^b' with 'a' belonging to real numbers and 'b' an int from 0 to 2")
+            print("Invalid equation format.")
+            print("This program only accepts polynomials with a maximum degree equal to 2.")
+            print("The components of the polynomial should be written 'a * x^b' (in this order) with 'a' belonging to real numbers and 'b' an int from 0 to 2")
             sys.exit(1)
 
     left_side_matches = re.findall(regex, sides[0])
@@ -45,7 +48,9 @@ def parse_polynomial(polynomial_str):
         coefficient = float(match[0].replace(" ", "")) if match[0] else 1.0
         exponent = float(match[1]) if match[1] else 1.0
         if not is_valid_exponent(exponent):
-            print("Invalid equation format. All polynomial should be written 'a * x^b' with 'a' belonging to real numbers and 'b' an int from 0 to 2")
+            print("Invalid equation format.")
+            print("This program only accepts polynomials with a maximum degree equal to 2.")
+            print("The components of the polynomial should be written 'a * x^b' (in this order) with 'a' belonging to real numbers and 'b' an int from 0 to 2")
             sys.exit(1)
         coefficients[exponent] = coefficients.get(exponent, 0) + coefficient
 
@@ -53,7 +58,9 @@ def parse_polynomial(polynomial_str):
         coefficient = float(match[0].replace(" ", "")) if match[0] else 1.0
         exponent = float(match[1]) if match[1] else 1.0
         if not is_valid_exponent(exponent):
-            print("Invalid equation format. All polynomial should be written 'a * x^b' with 'a' belonging to real numbers and 'b' an int from 0 to 2")
+            print("Invalid equation format.")
+            print("This program only accepts polynomials with a maximum degree equal to 2.")
+            print("The components of the polynomial should be written 'a * x^b' (in this order) with 'a' belonging to real numbers and 'b' an int from 0 to 2")
             sys.exit(1)
         coefficients[exponent] = coefficients.get(exponent, 0) - coefficient
 
@@ -146,7 +153,6 @@ def main():
         print(f"Polynomial degree: {int(degree)}")
         print("The polynomial degree is strictly greater than 2, I can't solve.")
     elif degree == 0:
-        print(degree)
         print("This is an exception, all real numbers are a solution!")
     elif degree == -1:
         print("This is an impossible equation, there is no solution!")
