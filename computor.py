@@ -13,10 +13,11 @@ def is_valid_exponent(exponent):
         return False
 
 def is_valid_expression(expression, regex):
-    """This function checks if all components of the polynomial sent as argument resclapects the format we use as regex."""
+    """This function checks if all components of the polynomial sent as argument respects the format we use as regex."""
     elements = re.split(r'\s*[\+\-]\s*', expression)
     for element in elements:
         element = element.strip()
+        element = element.strip("()")
         if not re.fullmatch(regex, element):
             return False
     return True
@@ -31,7 +32,7 @@ def parse_polynomial(polynomial_str):
 
     for side in sides:
         side = side.strip()
-        if (is_valid_expression(side, regex) == False and len(side) > 1 ):
+        if (is_valid_expression(side, regex) == False):
             print("Invalid equation format. All polynomial should be written 'a * x^b' with 'a' belonging to real numbers and 'b' an int from 0 to 2")
             sys.exit(1)
 
@@ -118,16 +119,20 @@ def main():
         sys.exit(1)
     
     degree_tbc = max(coefficients.keys(), default=0)
+    degree = 0
     if float(coefficients.get(2, 0)) != 0:
         degree = 2
     elif float(coefficients.get(1, 0)) != 0:
         degree = 1
-    elif float(coefficients.get(0, 0)) != 0:
+    elif float(coefficients.get(0, 0)) == 0:
         degree = 0
+    elif  float(coefficients.get(0, 0)) != 0:
+        degree = -1
     elif degree_tbc > 2:
         degree = degree_tbc
         pass
-    
+
+
     if degree == 1:
         print_reduced_form(coefficients)
         print(f"Polynomial degree: {int(degree)}")
@@ -140,10 +145,11 @@ def main():
         print_reduced_form(coefficients)
         print(f"Polynomial degree: {int(degree)}")
         print("The polynomial degree is strictly greater than 2, I can't solve.")
-    else:
+    elif degree == 0:
         print(degree)
         print("This is an exception, all real numbers are a solution!")
-        print("try again with a proper polynomial!")
+    elif degree == -1:
+        print("This is an impossible equation, there is no solution!")
 
 if __name__ == "__main__":
     main()
